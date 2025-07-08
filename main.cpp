@@ -9,9 +9,7 @@
 
 using namespace std;
 
-// =============================
 // Date Helper
-// =============================
 time_t getCurrentDate() {
     return time(0);
 }
@@ -19,7 +17,6 @@ time_t getCurrentDate() {
 time_t parseDate(const string& dateStr) {
     int year, month, day;
     char dash1, dash2;
-
     istringstream ss(dateStr);
     ss >> year >> dash1 >> month >> dash2 >> day;
 
@@ -44,9 +41,7 @@ bool isExpired(time_t expiryDate) {
     return expiryDate <= getCurrentDate();
 }
 
-// =============================
-// Product Class
-// =============================
+
 class Product {
 public:
     string name;
@@ -71,9 +66,7 @@ public:
     }
 };
 
-// =============================
-// Customer Class
-// =============================
+
 class Customer {
 public:
     string name;
@@ -91,9 +84,7 @@ public:
     }
 };
 
-// =============================
-// Cart Classes
-// =============================
+
 class CartItem {
 public:
     Product* product;
@@ -129,9 +120,6 @@ public:
     }
 };
 
-// =============================
-// Shipping Service
-// =============================
 pair<double, map<string, double>> ship(vector<pair<string, double>> shippables) {
     map<string, double> grouped;
     double totalWeight = 0.0;
@@ -145,12 +133,8 @@ pair<double, map<string, double>> ship(vector<pair<string, double>> shippables) 
     return {shippingFee, grouped};
 }
 
-// =============================
-// Checkout Function
-// =============================
 void checkout(Customer& customer, Cart& cart);
 
-// Handle expired item interaction
 void handleExpiredProduct(Customer& customer, Cart& cart, int index) {
     cout << "Product '" << cart.items[index].product->name << "' is expired!" << endl;
     cout << "Do you want to:\n";
@@ -163,113 +147,41 @@ void handleExpiredProduct(Customer& customer, Cart& cart, int index) {
     if (choice == 1) {
         cart.remove(index);
         cout << "Removed expired product.\n";
-        checkout(customer, cart); // Recalculate
+        checkout(customer, cart); // Retry checkout
     } else if (choice == 2) {
         cout << "Available products:\n";
         cout << "1. Cheese\n";
         cout << "2. Biscuits\n";
-        cout << "3. Yogurt\n";
-        cout << "4. Milk Carton\n";
-        cout << "5. Frozen Pizza\n";
-        cout << "6. Fresh Juice\n";
-        cout << "7. TV\n";
-        cout << "8. Laptop\n";
-        cout << "9. Headphones\n";
-        cout << "10. Gaming Console\n";
-        cout << "11. Microwave\n";
-        cout << "12. Camera\n";
-        cout << "13. Mobile Scratch Card\n";
-        cout << "14. Netflix Subscription Code\n";
-        cout << "15. E-Book Voucher\n";
-        cout << "16. Google Play Gift Card\n";
-        cout << "17. Steam Wallet Credit\n";
-        cout << "18. Online Course Access Code\n";
-        cout << "Select replacement product (1-18): ";
+        cout << "3. TV\n";
+        cout << "4. Laptop\n";
+        cout << "5. Headphones\n";
+        cout << "6. Mobile Scratch Card\n";
+        cout << "7. E-Book Voucher\n";
+        cout << "8. Online Course Access Code\n";
+        cout << "Select replacement product (1-8): ";
         int prodChoice;
         cin >> prodChoice;
 
+        static Product cheese("Cheese", 5.0, 10, "2025-12-31");
+        static Product biscuits("Biscuits", 3.0, 20, "2025-12-31");
+        static Product tv("TV", 500, 3);
+        static Product laptop("Laptop", 1200, 5);
+        static Product headphones("Headphones", 100, 10);
+        static Product scratchCard("Mobile Scratch Card", 10, 100);
+        static Product eBookVoucher("E-Book Voucher", 8, 200);
+        static Product courseCode("Online Course Access Code", 50, 80);
+
         Product* newProduct = nullptr;
-
-        // Define all products again inside scope
-        Product cheese("Cheese", 5.0, 10, "2025-12-31");
-        cheese.is_shippable = true;
-        cheese.weight = 0.2;
-
-        Product biscuits("Biscuits", 3.0, 20, "2025-12-31");
-        biscuits.is_shippable = true;
-        biscuits.weight = 0.7;
-
-        Product yogurt("Yogurt", 2.0, 30, "2025-12-31");
-        yogurt.is_shippable = true;
-        yogurt.weight = 0.15;
-
-        Product milkCarton("Milk Carton", 2.5, 15, "2025-12-31");
-        milkCarton.is_shippable = true;
-        milkCarton.weight = 1.0;
-
-        Product frozenPizza("Frozen Pizza", 6.0, 8, "2025-12-31");
-        frozenPizza.is_shippable = true;
-        frozenPizza.weight = 0.5;
-
-        Product freshJuice("Fresh Juice", 4.0, 12, "2025-12-31");
-        freshJuice.is_shippable = true;
-        freshJuice.weight = 1.2;
-
-        Product tv("TV", 500, 3);
-        tv.is_shippable = true;
-        tv.weight = 7.0;
-
-        Product laptop("Laptop", 1200, 5);
-        laptop.is_shippable = true;
-        laptop.weight = 2.5;
-
-        Product headphones("Headphones", 100, 10);
-        headphones.is_shippable = true;
-        headphones.weight = 0.3;
-
-        Product gamingConsole("Gaming Console", 400, 4);
-        gamingConsole.is_shippable = true;
-        gamingConsole.weight = 4.0;
-
-        Product microwave("Microwave", 100, 2);
-        microwave.is_shippable = true;
-        microwave.weight = 6.5;
-
-        Product camera("Camera", 300, 3);
-        camera.is_shippable = true;
-        camera.weight = 1.0;
-
-        Product scratchCard("Mobile Scratch Card", 10, 100);
-
-        Product netflixCode("Netflix Subscription Code", 15, 50);
-
-        Product eBookVoucher("E-Book Voucher", 8, 200);
-
-        Product googlePlayCard("Google Play Gift Card", 20, 150);
-
-        Product steamCredit("Steam Wallet Credit", 25, 100);
-
-        Product courseCode("Online Course Access Code", 50, 80);
 
         switch (prodChoice) {
             case 1: newProduct = &cheese; break;
             case 2: newProduct = &biscuits; break;
-            case 3: newProduct = &yogurt; break;
-            case 4: newProduct = &milkCarton; break;
-            case 5: newProduct = &frozenPizza; break;
-            case 6: newProduct = &freshJuice; break;
-            case 7: newProduct = &tv; break;
-            case 8: newProduct = &laptop; break;
-            case 9: newProduct = &headphones; break;
-            case 10: newProduct = &gamingConsole; break;
-            case 11: newProduct = &microwave; break;
-            case 12: newProduct = &camera; break;
-            case 13: newProduct = &scratchCard; break;
-            case 14: newProduct = &netflixCode; break;
-            case 15: newProduct = &eBookVoucher; break;
-            case 16: newProduct = &googlePlayCard; break;
-            case 17: newProduct = &steamCredit; break;
-            case 18: newProduct = &courseCode; break;
+            case 3: newProduct = &tv; break;
+            case 4: newProduct = &laptop; break;
+            case 5: newProduct = &headphones; break;
+            case 6: newProduct = &scratchCard; break;
+            case 7: newProduct = &eBookVoucher; break;
+            case 8: newProduct = &courseCode; break;
             default:
                 cout << "Invalid choice. Skipping replacement.\n";
                 return;
@@ -284,6 +196,7 @@ void handleExpiredProduct(Customer& customer, Cart& cart, int index) {
         checkout(customer, cart); // Recalculate
     } else {
         cout << "Invalid choice. Try again.\n";
+        handleExpiredProduct(customer, cart, index);
     }
 }
 
@@ -325,23 +238,22 @@ void checkout(Customer& customer, Cart& cart) {
         return;
     }
 
-    // Print shipment notice
+
     if (!shippedList.empty()) {
-        cout << "\n** Shipment notice **" << endl;
+        cout << "\n** Shipment notice **\n";
         for (auto& [name, w] : shippedList) {
-            cout << "1x " << name << " " << fixed << setprecision(0) << w * 1000 << "g" << endl;
+            cout << "1x " << name << " " << fixed << setprecision(0) << w * 1000 << "g\n";
         }
-        cout << "Total package weight " << fixed << setprecision(1) << (shippingFee / 10) << "kg" << endl;
+        cout << "Total package weight " << fixed << setprecision(1) << (shippingFee / 10) << "kg\n";
     }
 
     // Print receipt
-    cout << "\n** Checkout receipt **" << endl;
+    cout << "\n** Checkout receipt **\n";
     for (auto item : cart.items) {
         cout << item.quantity << "x " << item.product->name << " "
              << fixed << setprecision(0) << item.product->price * item.quantity << endl;
     }
-
-    cout << "----------------------" << endl;
+    cout << "----------------------\n";
     cout << "Subtotal " << fixed << setprecision(0) << subtotal << endl;
     cout << "Shipping " << fixed << setprecision(0) << shippingFee << endl;
     cout << "Amount " << fixed << setprecision(0) << totalAmount << endl;
@@ -352,12 +264,9 @@ void checkout(Customer& customer, Cart& cart) {
     cart.clear();
 }
 
-// =============================
-// Main Function
-// =============================
 int main() {
     try {
-        // Create products manually like this
+        // Only define products that are actually added to cart
         Product cheese("Cheese", 5.0, 10, "2026-01-01");
         cheese.is_shippable = true;
         cheese.weight = 0.2;
@@ -371,16 +280,20 @@ int main() {
         tv.weight = 7.0;
 
         Product scratchCard("Mobile Scratch Card", 10, 100);
+        Product eBookVoucher("E-Book Voucher", 8, 200);
+        Product courseCode("Online Course Access Code", 50, 80);
 
         // Create customer
-        Customer customer("Ahmed", 1500); // Only $150 — insufficient for full purchase
+        Customer customer("Ahmed", 1500);
 
-        // Add to cart
+        // Add items to cart
         Cart cart;
         cart.add(&cheese, 2);
-        cart.add(&biscuits, 1);
-        cart.add(&tv, 1);
+        cart.add(&biscuits, 1); 
+        cart.add(&tv, 1); 
         cart.add(&scratchCard, 1);
+        cart.add(&eBookVoucher, 1);
+        cart.add(&courseCode, 1);
 
         // Checkout
         checkout(customer, cart);
